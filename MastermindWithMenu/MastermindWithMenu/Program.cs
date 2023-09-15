@@ -18,9 +18,16 @@ namespace mastermind
             string currentGuess = "";
             char replay;
 
-            /// Message de bienvenue
-            Console.WriteLine("Bienvenue sur Mastermind!\nCouleurs possibles: YBRGWCP\nDevine le code en 4 couleurs (ex.YBYP)\n");
+            /// Paramètre par défaut 
+            char gameMode;
+            int codeLength = 4;
+            int colorPoolSize = 7;
+            char options = 'o';
 
+            /// Message de bienvenue
+            Console.WriteLine("Bienvenue sur Mastermind!\nCouleurs possibles: YBRGWCP\nDevine le code couleurs (ex.YBYP)\n");
+            gameMode = Selection();
+            
             do
             {
                 /// Réinitialisation code
@@ -111,18 +118,30 @@ namespace mastermind
                         Console.WriteLine("Vous avez perdu :<\nLe code secret était: " + secretCode + "\n");
                     }
                 }
-                
+
                 /// Option replay
                 Console.WriteLine("Appuyez sur R pour rejouer");
                 replay = Console.ReadKey().KeyChar;
             } while (replay == 'r');
-           
+
             /// Message au revoir
             Console.WriteLine("\nMerci d'avoir jouer et à bientôt!");
 
-       
+
             /// Garde la fenêtre ouverte
             Console.ReadLine();
         }
+        static char Selection() {
+            Console.WriteLine("Vueillez selectionner le mode de jeu avec les touches suivantes:\nClassique - C\nFacile - F");
+            char gameMode = Console.ReadKey().KeyChar;
+            if (gameMode == 'f')
+            {
+                return gameMode;
+            }
+            else {
+                return 'c';
+            }
+        }
+
     }
 }

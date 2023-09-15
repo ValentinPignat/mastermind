@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // Les informations générales relatives à un assembly dépendent de
 // l'ensemble d'attributs suivant. Changez les valeurs de ces attributs pour modifier les informations
 // associées à un assembly.
-[assembly: AssemblyTitle("ConsoleApp1")]
+[assembly: AssemblyTitle("MastermindWithMenu")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("DGEP")]
-[assembly: AssemblyProduct("ConsoleApp1")]
+[assembly: AssemblyProduct("MastermindWithMenu")]
 [assembly: AssemblyCopyright("Copyright © DGEP 2023")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // Le GUID suivant est pour l'ID de la typelib si ce projet est exposé à COM
-[assembly: Guid("ed4b7539-2d17-4332-8678-a62722afe527")]
+[assembly: Guid("5b293be3-bfe2-4697-98f8-c6193fa7b724")]
 
 // Les informations de version pour un assembly se composent des quatre valeurs suivantes :
 //
