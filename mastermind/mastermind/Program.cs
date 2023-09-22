@@ -57,6 +57,16 @@ namespace mastermind
                         continue;
                     }
 
+                    /// Re-loop si pas couleur
+                    for (int j = 0; j < 4; j++)
+                    {
+                        if (colorPool.Contains(currentGuess[j]) == false){
+                            Console.WriteLine("\nAttention veuillez entrer 4 lettres (ex.YBYP)\n");
+                            i--;
+                            break;
+                        }
+                    }
+
                     /// Copie pour éviter double vérification
                     string currentGuessPool = currentGuess;
 

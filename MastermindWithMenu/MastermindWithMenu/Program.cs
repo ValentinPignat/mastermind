@@ -7,43 +7,55 @@ namespace mastermind
 {
     internal class Program
     {
+        ///Initialisations
+        static private string colorPoolDefault = "YBRGWCP";
+        static private string colorPool = "";
+        static private string currentGuess = "";
+        static private char replay;
+
+        /// Paramètre par défaut 
+        //static private char gameDifficulty;
+        static private int codeLength = 4;
+        static private int colorPoolSize = 7;
+        static private char options = 'o';
+        static private bool multiplayer = false;
+        static private string secretCode = "";
+
         /// <summary>
         /// Jeu de Mastermind sur la console 
         /// </summary>
         /// <param name="args"></param>
         static void Main(string[] args)
         {
-            ///Initialisations
-            string colorPool = "YBRGWCP";
-            string currentGuess = "";
-            char replay;
-
-            /// Paramètre par défaut 
-            char gameMode;
-            int codeLength = 4;
-            int colorPoolSize = 7;
-            char options = 'o';
 
             /// Message de bienvenue
             Console.WriteLine("Bienvenue sur Mastermind!\nCouleurs possibles: YBRGWCP\nDevine le code couleurs (ex.YBYP)\n");
-            gameMode = Selection();
             
             do
             {
                 /// Réinitialisation code
-                string secretCode = "";
-
-                /// Generer Code aléatoire (index aléatoire dans colorPool)
-                Random rnd = new Random();
-                for (int i = 0; i < 4; i++)
+                secretCode = "";
+                
+                /// Option changer param
+                Console.WriteLine("\nVoulez-vous changer les paramètres du jeu ?\nAppuyer sur Y si oui\n");
+                char changerParam = Console.ReadKey().KeyChar;
+                if (changerParam == 'y')
                 {
-                    int x = rnd.Next(0, 6);
-                    secretCode += colorPool[x];
-
-                    ///TEST
-                    ///Console.WriteLine(secretCode);
+                    Selection();
                 }
                 Console.WriteLine();
+
+                /// Generer Code ou demander code
+                if (multiplayer == true) {
+                    Console.WriteLine("\nLe premier joueur peut entrer un code de " + codeLength + " lettres de long.\nLes lettres possible sont: " + colorPool+":\n");
+                    secretCode = Console.ReadLine().ToUpper(); ;
+                    Console.Clear();
+                }
+                else { 
+                    randomCode();
+                    
+                }
+                
                 ///Boucle de 10 essais
                 for (int i = 0; i < 10; i++)
                 {
@@ -53,22 +65,33 @@ namespace mastermind
                     string secretCodePool = secretCode;
 
                     /// Récupération de l'essai
-                    Console.WriteLine("Essai " + (i + 1) + ":");
+                    Console.WriteLine("Color Pool: " + colorPool + "\nEssai " + (i + 1) + ":");
                     currentGuess = Console.ReadLine().ToUpper();
 
                     /// Re-loop si input n'a pas la bonne longeur
-                    if (currentGuess.Length != 4)
+                    if (currentGuess.Length != codeLength)
                     {
-                        Console.WriteLine("\nAttention veuillez entrer 4 lettres (ex.YBYP)\n");
+                        Console.WriteLine("\nAttention veuillez entrer " + codeLength + " lettres (ex.YBYY)\n");
                         i--;
                         continue;
+                    }
+
+                    /// Re-loop si pas couleur
+                    for (int j = 0; j < codeLength; j++)
+                    {
+                        if (colorPool.Contains(currentGuess[j]) == false)
+                        {
+                            Console.WriteLine("\nAttention veuillez entrer " + codeLength + " lettres (ex.YBYP)\n");
+                            i--;
+                            break;
+                        }
                     }
 
                     /// Copie pour éviter double vérification
                     string currentGuessPool = currentGuess;
 
                     /// Verification Vrai
-                    for (int j = 0; j < 4; j++)
+                    for (int j = 0; j < codeLength; j++)
                     {
                         if (currentGuess[j] == secretCode[j])
                         {
@@ -103,14 +126,14 @@ namespace mastermind
                     }
 
                     /// Victoire -> résultats / message de fin 
-                    if (currentRight == 4)
+                    if (currentRight == codeLength)
                     {
                         Console.WriteLine("\nBravo!\nTu as découvert le code en " + (i + 1) + " essais.\n");
                         break;
                     }
 
                     /// Feedback
-                    Console.WriteLine("=> Ok: " + currentRight + "\n=> Mauvaise position: " + currentWrongPlace + "\n");
+                    Console.WriteLine("\n=> Ok: " + currentRight + "\n=> Mauvaise position: " + currentWrongPlace + "\n");
 
                     /// Défaite
                     if (i == 9)
@@ -131,17 +154,93 @@ namespace mastermind
             /// Garde la fenêtre ouverte
             Console.ReadLine();
         }
-        static char Selection() {
-            Console.WriteLine("Vueillez selectionner le mode de jeu avec les touches suivantes:\nClassique - C\nFacile - F");
-            char gameMode = Console.ReadKey().KeyChar;
-            if (gameMode == 'f')
+
+        /// <summary>
+        /// Changement des paramètres de la partie
+        /// </summary> 
+        static void Selection()
+        {
+            /// Try si Input invalide 
+            try
             {
-                return gameMode;
+                /// Change difficulté - Défaut: Classique
+                /*Console.WriteLine("\nVeuillez selectionner le mode de jeu avec les touches suivantes:\nClassique - C\nFacile - F");
+                char gameMode = Console.ReadLine()[0];
+                if (gameMode == 'f' || gameMode == 'F')
+                {
+                    gameDifficulty = 'f';
+                }
+                else {
+                    gameDifficulty = 'c';
+                }*/
+
+                /// Change multiplayer - Défaut: Solo
+                Console.WriteLine("\nVeuillez selectionner le mode de jeu avec les touches suivantes:\nSolo - S\nDeux Joueurs - D");
+                char gameMode = Console.ReadLine()[0];
+                if (gameMode == 'd' || gameMode == 'D')
+                {
+                    multiplayer = true;
+                }
+                else {
+                    multiplayer = false;
+                }
+                /// Change nombre de couleur - Défaut : 7
+                Console.WriteLine("\nVeuillez selectionner le nombre de couleur entre 2 et 7");
+                int gameInt = Convert.ToInt16(Console.ReadLine());
+
+
+                if (gameInt >= 2 && gameInt <= 7)
+                {
+                    colorPoolSize = gameInt;
+                }
+                else
+                {
+                    colorPoolSize = 7;
+                }
+
+                /// Nouveau colorPool selon taille
+                colorPool = colorPoolDefault.Substring(0, colorPoolSize);
+
+                /// Change longueur du code - Défaut : 4
+                Console.WriteLine("\nVeuillez selectionner la longeur du code entre 2 et 6");
+                gameInt = Convert.ToInt16(Console.ReadLine());
+
+                if (gameInt >= 2 && gameInt <= 6)
+                {
+                    codeLength = gameInt;
+                }
+                else
+                {
+                    codeLength = 4;
+                }
             }
-            else {
-                return 'c';
+
+            ///Paramètres inchangé si erreur 
+            catch (Exception)
+            {
+                Console.WriteLine("Valeur invalide => paramètres par défaut");
             }
+
         }
 
+        /// <summary>
+        /// Crée un code secret selon la longueur et le nombre de couleur
+        /// </summary>
+        static void randomCode() {
+            /// Generer Code aléatoire (index aléatoire dans colorPool)
+            Random rnd = new Random();
+                for (int i = 0; i< codeLength; i++)
+                {
+                    int x = rnd.Next(0, colorPoolSize-1);
+                    secretCode += colorPool[x];
+
+                    ///TEST
+                    Console.WriteLine(secretCode);
+                }
+}
+
     }
+
+        
+
 }
