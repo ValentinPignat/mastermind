@@ -17,7 +17,6 @@ namespace mastermind
         //static private char gameDifficulty;
         static private int codeLength = 4;
         static private int colorPoolSize = 7;
-        static private char options = 'o';
         static private bool multiplayer = false;
         static private string secretCode = "";
 
