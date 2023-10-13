@@ -14,11 +14,12 @@ namespace mastermind
         // Initialisations variables
         static private string colorPool = "";
         static private string currentGuess = "";
-        static private char replay;
+        static private char replay = 'r';
         static public StringBuilder easyFeedback = new StringBuilder("");
         static private string secretCode = "";
         static public bool reloop = false;
         static private ConsoleKeyInfo menuInput;
+        static public bool exit = false;
 
         // Paramètre par défaut 
         static private string gameDifficulty = "Normal";
@@ -31,10 +32,6 @@ namespace mastermind
         /// - Mode Facile 
         /// - Selection du nombre de couleur/ longueur du code
         /// - Mode deux joueur 
-        /// 
-        /// A faire :
-        /// Corriger Icescrum 
-        /// Vrai multiplayer 
         /// </summary>
         /// <param name="args"></param>
         static void Main(string[] args)
@@ -42,7 +39,12 @@ namespace mastermind
             // Ouvre menu
             StartGame();
 
-            do
+            // Quitte le jeu
+            if (exit) {
+                replay = 'n';
+            }
+
+            while (replay == 'r' || replay == 'R' || replay == 'm' || replay == 'M')
             {
                 // Ouvre menu si input m à la fin de la boucle
                 if (replay == 'm' || replay == 'M')
@@ -181,7 +183,7 @@ namespace mastermind
                     // Victoire -> résultats / message de fin 
                     if (currentRight == codeLength)
                     {
-                        Console.WriteLine("\nBravo!\nTu as découvert le code en " + (i + 1) + " essais.\n");
+                        Console.WriteLine("\nBravo!\nVous avez découvert le code en " + (i + 1) + " essais.\n");
                         break;
                     }
 
@@ -272,8 +274,7 @@ namespace mastermind
                     // Feedback normal
                     else
                     {
-                        Console.WriteLine("\n=> Ok: " + currentRight + "\n=> Mauvaise position: " + currentWrongPlace + "\n");
-
+                        Console.WriteLine("\n=> Bien placé: " + currentRight + "\n=> Mauvaise position: " + currentWrongPlace + "\n");
                     }
                     // Défaite
                     if (i == 9)
@@ -283,12 +284,14 @@ namespace mastermind
                 }
 
                 // Option replay et retour au menu
-                Console.WriteLine("Appuyez sur R pour rejouer ou M pour retourner au menu");
+                Console.WriteLine("Appuyez sur R pour rejouer ou M pour retourner au menu. Autre touche pour quitter.");
                 replay = Console.ReadKey().KeyChar;
-            } while (replay == 'r' || replay == 'R' || replay == 'm' || replay == 'M');
+            }
 
             // Message au revoir
-            Console.WriteLine("\nMerci d'avoir jouer et à bientôt!");
+            Console.Clear();
+            PrintLogo();
+            Console.WriteLine("\n              Merci d'avoir joué et à bientôt!");
 
 
             // Garde la fenêtre ouverte
@@ -339,7 +342,8 @@ namespace mastermind
                 " Longueur du code:              < " + codeLength + " >\n" +
                 " Nombre de couleurs possibles:  < " + colorPoolSize + " >\n" +
                 " Nombre de joueur:              < " + multiplayer + " >\n" +
-                " Paramètre par défaut           < Enter >"
+                " Paramètre par défaut           < Enter >\n" +
+                " Quitter                        < Enter >\n"
                 );
             menuInput = Console.ReadKey();
             // Navigation et lancement de la partie selon input 
@@ -370,7 +374,8 @@ namespace mastermind
                 " Longueur du code:              < " + codeLength + " >\n" +
                 " Nombre de couleurs possibles:  < " + colorPoolSize + " >\n" +
                 " Nombre de joueur:              < " + multiplayer + " >\n" +
-                " Paramètre par défaut           < Enter >"
+                " Paramètre par défaut           < Enter >\n" +
+                " Quitter                        < Enter >\n"
                 );
             menuInput = Console.ReadKey();
 
@@ -414,7 +419,8 @@ namespace mastermind
                 " Longueur du code:              < " + codeLength + " >  <-----\n" +
                 " Nombre de couleurs possibles:  < " + colorPoolSize + " >\n" +
                 " Nombre de joueur:              < " + multiplayer + " >\n" +
-                " Paramètre par défaut           < Enter >"
+                " Paramètre par défaut           < Enter >\n" +
+                " Quitter                        < Enter >\n"
                 );
             menuInput = Console.ReadKey();
 
@@ -460,7 +466,8 @@ namespace mastermind
                 " Longueur du code:              < " + codeLength + " >\n" +
                 " Nombre de couleurs possibles:  < " + colorPoolSize + " >  <-----\n" +
                 " Nombre de joueur:              < " + multiplayer + " >\n" +
-                " Paramètre par défaut           < Enter >"
+                " Paramètre par défaut           < Enter >\n" +
+                " Quitter                        < Enter >\n"
                 );
             menuInput = Console.ReadKey();
 
@@ -506,7 +513,8 @@ namespace mastermind
                 " Longueur du code:              < " + codeLength + " >\n" +
                 " Nombre de couleurs possibles:  < " + colorPoolSize + " >\n" +
                 " Nombre de joueur:              < " + multiplayer + " >  <-----\n" +
-                " Paramètre par défaut           < Enter >"
+                " Paramètre par défaut           < Enter >\n" +
+                " Quitter                        < Enter >\n"
                 );
             menuInput = Console.ReadKey();
 
@@ -550,7 +558,8 @@ namespace mastermind
                 " Longueur du code:              < " + codeLength + " >\n" +
                 " Nombre de couleurs possibles:  < " + colorPoolSize + " >\n" +
                 " Nombre de joueur:              < " + multiplayer + " >\n" +
-                " Paramètre par défaut           < Enter >  <-----"
+                " Paramètre par défaut           < Enter >  <-----\n" +
+                " Quitter                        < Enter >\n"
                 );
             menuInput = Console.ReadKey();
 
@@ -567,8 +576,44 @@ namespace mastermind
                 case ConsoleKey.UpArrow:
                     Multi();
                     break;
+                case ConsoleKey.DownArrow:
+                    Exit();
+                    break;
                 default:
                     Default();
+                    break;
+            }
+        } 
+        /// <summary>
+        /// Menu avec "curseur sur exit
+        /// </summary>
+        static void Exit()
+        {
+            Console.Clear();
+            PrintLogo();
+            Console.WriteLine(
+                "              Bienvenue sur Mastermind\n\n" +
+                " Lancer la Partie               < Enter >\n" +
+                " Difficulté:                    < " + gameDifficulty + " >\n" +
+                " Longueur du code:              < " + codeLength + " >\n" +
+                " Nombre de couleurs possibles:  < " + colorPoolSize + " >\n" +
+                " Nombre de joueur:              < " + multiplayer + " >\n" +
+                " Paramètre par défaut           < Enter >\n" +
+                " Quitter                        < Enter >  <-----\n"
+                );
+            menuInput = Console.ReadKey();
+
+            // Navigation et changement paramètre selon input 
+            switch (menuInput.Key)
+            {
+                case ConsoleKey.Enter:
+                    exit = true;
+                    break;
+                case ConsoleKey.UpArrow:
+                    Default();
+                    break;
+                default:
+                    Exit();
                     break;
             }
         }
