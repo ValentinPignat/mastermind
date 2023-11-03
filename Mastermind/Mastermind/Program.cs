@@ -39,11 +39,6 @@ namespace mastermind
             // Ouvre menu
             StartGame();
 
-            // Quitte le jeu
-            if (exit) {
-                replay = 'n';
-            }
-
             while (replay == 'r' || replay == 'R' || replay == 'm' || replay == 'M')
             {
                 // Ouvre menu si input m à la fin de la boucle
@@ -52,6 +47,13 @@ namespace mastermind
                     replay = 'n';
                     StartGame();
                 }
+
+                // Quitte le jeu
+                if (exit)
+                {
+                    break;
+                }
+
                 // Efface menu
                 Console.Clear();
 
